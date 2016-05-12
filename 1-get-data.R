@@ -42,6 +42,19 @@ lapply(song_list, function(x) createNode(graph, "Song", x))
 
 ############################################################## pull out list of all shows
 
+## URL
+URL = "http://www.pearljam.com/setlists"
+show_links = URL %>% read_html()
 
+## pull out the show years
+year_links = show_links %>% html_nodes("#sub_sub_nav a") %>% html_attr("href")
 
+## STARTER CODE:  pull out the show links
+URL = year_links[1]
+show_pages = URL %>% read_html()
+show_page_link = show_pages %>% html_nodes("#slider_showdates a") %>% html_attr("href")
+show_page_name = show_pages %>% html_nodes("#slider_showdates a") %>% html_text()
+
+## TODO:  parse out location and date from the show_page_name
+## TODO:  loop all years and get show pages and parse
 
