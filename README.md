@@ -1,23 +1,41 @@
-# About
+# Pearl Jam Setlists
 
-Crawl song and setlist data from pearl jam's website, model and throw the data into `Neo4j`, and see if it's possible to fit a model that will predict the songs played a given show.  Ideal would be to predict order, but given the variation from show to show, what sort of modeling is possible?
+The first time I saw Pearl Jam live was on September 16th, 1998, and they opened with my favorite song, `Release`. It was the perfect opening song, and ever since, I always hope they will open with it every time I get a chance to see them live.  With them coming to Fenway Park on August 5th, I find myself wondering about the chances of the song being played first.  Instead of guessing, why not scrape data available on the interwebs and look at the patterns?
 
-## Metric
+This repo scrapes information about Pearl Jam concerts, including the setlists for those shows, and puts the data into `Neo4j` using `R`.  As of July 31, 2016, the code works
 
-Simple.  Just the % of songs correct, but will need to think about the fact that each show may have a different number of songs played.
+## Requirements
 
-## Resources
+1.  `R`  
+2.  Neo4j.  This post uses version `3.0.2 Community Edition`
 
-[songs](http://pearljam.com/music)
-[setlists](http://www.pearljam.com/setlists)
+## Cypher queries 
 
-## Process
+After grabbing the data, we can answer some cool questions.  First, let's check to see how things look.  What are the last 5 shows they have played (as of July 31st, 2016).
 
-1.  Crawl the data from R into Neo4j  
-2.  Ask questions  
-3.  Use graphlab to fit a model
+```
+MATCH (song:Song)-[p:PLAYED_AT]->(show:Show {year:'2016'})
+WITH show.date as date, p
+RETURN date, COUNT(p) as songs_played
+ORDER BY date DESC
+LIMIT 5
+```
 
-## Status
+returns
 
--  The crawler works as of May 2016, and import into Neo4j
--  The data model could be expanded to blow out venues, dates, etc.
+```
+╒══════════╤════════════╕
+│date      │songs_played│
+╞══════════╪════════════╡
+│07-17-2016│27          │
+├──────────┼────────────┤
+│07-09-2016│30          │
+├──────────┼────────────┤
+│06-11-2016│22          │
+├──────────┼────────────┤
+│06-09-2016│11          │
+├──────────┼────────────┤
+│05-12-2016│32          │
+└──────────┴────────────┘
+```
+
