@@ -5,6 +5,7 @@ library(rvest)
 library(dplyr)
 library(stringr)
 library(uuid)
+library(readr)
 
 
 ############################################################## parse out the songs
