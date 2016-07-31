@@ -11,7 +11,7 @@ This repo scrapes information about Pearl Jam concerts, including the setlists f
 
 ## Cypher queries 
 
-After grabbing the data, we can answer some cool questions.  First, let's check to see how things look.  What are the last 5 shows they have played (as of July 31st, 2016).
+After grabbing the data, we can answer some cool questions.  First, let's check to see how things look.  What are the last 5 shows they have played in 2016 (as of July 31st, 2016).
 
 ```
 MATCH (song:Song)-[p:PLAYED_AT]->(show:Show {year:'2016'})
@@ -37,5 +37,83 @@ returns
 ├──────────┼────────────┤
 │05-12-2016│32          │
 └──────────┴────────────┘
+```
+
+How many songs are they playing, on average, for the 2016 shows?
+
+```
+MATCH (song:Song)-[p:PLAYED_AT]->(show:Show {year:'2016'})
+WITH show.date as date, COUNT(p) as plays
+RETURN AVG(plays) as songs_played
+```
+tells us that they are playing just above 30 songs per show.
+
+Because I am hoping that they open with `Release`, let's identify all of the shows where they opened with the song.
+
+```
+MATCH (song:Song)-[p:PLAYED_AT]->(show:Show {year:'2016'})
+WHERE p.rank = '1' AND song.name = 'Release'
+WITH song.name as song, show.date as date, show.show_name as name
+RETURN date, name,  song
+ORDER BY date DESC
+```
+which returns
+
+```
+╒══════════╤════════════════════════╤═══════╕
+│date      │name                    │song   │
+╞══════════╪════════════════════════╪═══════╡
+│07-17-2016│Pemberton, BC 07-17-2016│Release│
+└──────────┴────────────────────────┴───────┘
+```
+
+Unfortatenelyl for me, they have only opened with the song once, and it was at their last show.  Yikes.
+
+For sake of argument, which songs are being played the most as the opening song?
+
+```
+MATCH (song:Song)-[p:PLAYED_AT]->(show:Show {year:'2016'})
+WHERE p.rank = '1'
+WITH song.name as song, COUNT(*) as plays
+RETURN song, plays
+ORDER BY plays DESC
+LIMIT 10
+```
+
+returns
+
+```
+╒══════════════════════════════╤═════╕
+│song                          │plays│
+╞══════════════════════════════╪═════╡
+│Corduroy                      │3    │
+├──────────────────────────────┼─────┤
+│Go                            │3    │
+├──────────────────────────────┼─────┤
+│Why Go                        │3    │
+├──────────────────────────────┼─────┤
+│Lightning Bolt                │2    │
+├──────────────────────────────┼─────┤
+│Elderly Woman Behind The Count│1    │
+│er In A Small Town            │     │
+├──────────────────────────────┼─────┤
+│Porch                         │1    │
+├──────────────────────────────┼─────┤
+│Nothingman                    │1    │
+├──────────────────────────────┼─────┤
+│State Of Love And Trust       │1    │
+├──────────────────────────────┼─────┤
+│Once                          │1    │
+├──────────────────────────────┼─────┤
+│Of The Girl                   │1    │
+├──────────────────────────────┼─────┤
+│Release                       │1    │
+├──────────────────────────────┼─────┤
+│Interstellar Overdrive        │1    │
+├──────────────────────────────┼─────┤
+│Oceans                        │1    │
+├──────────────────────────────┼─────┤
+│Rearviewmirror                │1    │
+└──────────────────────────────┴─────┘
 ```
 
