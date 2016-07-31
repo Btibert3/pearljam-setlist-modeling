@@ -117,3 +117,4 @@ returns
 └──────────────────────────────┴─────┘
 ```
 
+As a band that prides itself on creating setlists on a show-by-show basis, the diverity in the opening songs makes sense, although there are a few that they have opened with more than once.  
