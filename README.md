@@ -67,7 +67,7 @@ which returns
 └──────────┴────────────────────────┴───────┘
 ```
 
-Unfortatenelyl for me, they have only opened with the song once, and it was at their last show.  Yikes.
+Unfortunately for me, they have only opened with the song once, and it was at their last show.  Yikes.
 
 For sake of argument, which songs are being played the most as the opening song?
 
